@@ -17,7 +17,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:5000/api/login', {
+      const response = await fetch('http://localhost:5000/api/v1/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -26,7 +26,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
       if (response.ok) {
         onLogin(data.data.attributes.token);
       } else {
-        setError(data.errors[0].detail || 'Login failed');
+        setError(data.errors[0]?.detail || 'Login failed');
       }
     } catch (err) {
       setError('Network error');

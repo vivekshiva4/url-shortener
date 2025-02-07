@@ -20,14 +20,14 @@ const Dashboard: React.FC<DashboardProps> = ({ token }) => {
   useEffect(() => {
     const fetchUrls = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/user/urls', {
+        const response = await fetch('http://localhost:5000/api/v1/user/urls', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
         if (response.ok) {
           setUrls(data.data);
         } else {
-          setError(data.errors[0].detail || 'Failed to load URLs');
+          setError(data.errors[0]?.detail || 'Failed to load URLs');
         }
       } catch {
         setError('Network error');

@@ -24,19 +24,17 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
       return;
     }
     try {
-      // Call the register endpoint
-      const response = await fetch('http://localhost:5000/api/register', {
+      const response = await fetch('http://localhost:5000/api/v1/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
       });
       const data = await response.json();
       if (response.ok) {
-        // Assume that after registration, the API returns a token (or you could redirect to login)
-        // If not, you might need to call the login endpoint after registration.
+        // Registration now returns a token immediately
         onRegister(data.data.attributes.token || '');
       } else {
-        setError(data.errors[0].detail || 'Registration failed');
+        setError(data.errors[0]?.detail || 'Registration failed');
       }
     } catch (err) {
       setError('Network error');

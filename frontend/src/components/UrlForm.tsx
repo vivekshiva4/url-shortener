@@ -21,7 +21,7 @@ const UrlForm: React.FC<UrlFormProps> = ({ token }) => {
     }
 
     try {
-      const headers: any = { 'Content-Type': 'application/json' };
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
@@ -32,7 +32,7 @@ const UrlForm: React.FC<UrlFormProps> = ({ token }) => {
       });
       const data = await response.json();
       if (!response.ok) {
-        setError(data.errors[0].detail || 'Something went wrong');
+        setError(data.errors[0]?.detail || 'Something went wrong');
       } else {
         setShortUrl(data.data.attributes.shortUrl);
       }

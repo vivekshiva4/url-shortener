@@ -7,7 +7,7 @@ import { createConnection } from "typeorm";
 import authRoutes from "./routes/auth";
 import urlRoutes from "./routes/url";
 import redirectRoutes from "./routes/redirect";
-import { SERVER_PORT } from "./constants";
+import { FRONT_END_BASE_URL, SERVER_PORT } from "./constants";
 
 const startServer = (app: express.Express, PORT: number): void => {
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
@@ -20,7 +20,7 @@ const connectToDBAndStartServer = async (): Promise<void> => {
 
     // Create and configure the Express app
     const app = express();
-    app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+    app.use(cors({ origin: FRONT_END_BASE_URL, credentials: true }));
     app.use(express.json());
 
     // Apply rate limiting: max 100 requests per 15 minutes per IP.

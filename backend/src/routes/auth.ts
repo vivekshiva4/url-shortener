@@ -46,15 +46,23 @@ router.post(
   registerValidationRules,
   async (req: Request<{}, {}, RegisterRequestBody>, res: Response) => {
     try {
-      const { body: { username, password } } = req;
-      const { username: createdUsername } = await register(username, password);
-      return res
-        .status(201)
-        .json({ message: `User created successfully for the username ${createdUsername}` });
+      const { username, password } = req.body;
+      const { token, user } = await register(username, password);
+      return res.status(201).json({
+        data: {
+          attributes: {
+            userId: user.userId,
+            username: user.username,
+            token,
+          },
+        },
+      });
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : ERROR_MESSAGES.UNEXPECTED_ERROR;
-      const statusCode = errorMessage === ERROR_MESSAGES.USER_ALREADY_EXISTS ? 409 : 500;
-      return res.status(statusCode).json({ error: errorMessage });
+      const errorMessage =
+        error instanceof Error ? error.message : ERROR_MESSAGES.UNEXPECTED_ERROR;
+      const statusCode =
+        errorMessage === ERROR_MESSAGES.USER_ALREADY_EXISTS ? 409 : 500;
+      return res.status(statusCode).json({ errors: [{ detail: errorMessage }] });
     }
   }
 );
@@ -64,24 +72,23 @@ router.post(
   loginValidationRules,
   async (req: Request<{}, {}, LoginRequestBody>, res: Response) => {
     try {
-      const { body: { username, password } } = req;
-      const {
-        user: {
-          userId,
-          username: userName,
-        },
-        token,
-      } = await login(username, password);
+      const { username, password } = req.body;
+      const { token, user } = await login(username, password);
       return res.json({
-        userId,
-        username: userName,
-        token,
+        data: {
+          attributes: {
+            userId: user.userId,
+            username: user.username,
+            token,
+          },
+        },
       });
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : ERROR_MESSAGES.UNEXPECTED_ERROR;
-      const statusCode = errorMessage === ERROR_MESSAGES.INVALID_CREDENTIALS ? 400 : 500;
-
-      return res.status(statusCode).json({ error: errorMessage });
+      const errorMessage =
+        error instanceof Error ? error.message : ERROR_MESSAGES.UNEXPECTED_ERROR;
+      const statusCode =
+        errorMessage === ERROR_MESSAGES.INVALID_CREDENTIALS ? 400 : 500;
+      return res.status(statusCode).json({ errors: [{ detail: errorMessage }] });
     }
   }
 );

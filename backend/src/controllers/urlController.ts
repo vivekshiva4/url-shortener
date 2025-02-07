@@ -14,7 +14,7 @@ export const createShortUrl = async (
   let slug: string;
 
   if (customSlug) {
-    const exists = await urlRepository.findOne(customSlug);
+    const exists = await urlRepository.findOne({ where: { slug: customSlug } });
     if (exists) {
       logger.warn(`Custom slug "${customSlug}" already in use`);
       throw new Error(ERROR_MESSAGES.SLUG_ALREADY_EXISTED);
@@ -22,7 +22,7 @@ export const createShortUrl = async (
     slug = customSlug;
   } else {
     slug = generateSlug();
-    while (await urlRepository.findOne(slug)) {
+    while (await urlRepository.findOne({ where: { slug } })) {
       slug = generateSlug();
     }
   }
@@ -43,11 +43,12 @@ export const createShortUrl = async (
   await urlRepository.save(urlEntry);
   logger.info(`Created new short URL: ${slug} for ${originalUrl}`);
   return slug;
-}
+};
 
 export const getUrlBySlug = async (slug: string): Promise<string | null> => {
   const urlRepository = getRepository(ShortUrl);
-  const record = await urlRepository.findOne(slug);
+  // Use the proper lookup format.
+  const record = await urlRepository.findOne({ where: { slug } });
   if (record) {
     record.visits++;
     await urlRepository.save(record);

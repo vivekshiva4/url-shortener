@@ -23,3 +23,4 @@ export const ERROR_MESSAGES: ErrorMessagesType = {
 export const DUMMY_JWT_SECRET: string = 'dummy_jwt_secret';
 export const SERVER_PORT: number = 5000;
 export const BASE_URL: string = 'http://localhost:5000';
+export const FRONT_END_BASE_URL: string = '"http://localhost:3000';

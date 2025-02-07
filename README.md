@@ -79,8 +79,6 @@ When a short URL is visited, the service redirects the user to the original URL 
 
 All API responses follow a JSON format similar to JSON:API with nested `data.attributes` for success responses and an `errors` array for errors.
 
-### 1. User Registration
-
 - **User Registration**: `POST /api/v1/register`
 - **User Login**: `POST /api/v1/login`
 - **Create a Short URL**: `POST /api/v1/shorten`
